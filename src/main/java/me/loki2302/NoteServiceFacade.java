@@ -17,18 +17,27 @@ public class NoteServiceFacade {
     @Autowired
     private NoteDomainEventRepository noteDomainEventRepository;
 
+    @Autowired
+    private NoteViewUpdater noteViewUpdater;
+
     public void handleCommand(CreateNoteCommand command) {
         List<NoteDomainEvent> events = noteCommandHandler.handleCommand(command);
         noteDomainEventRepository.save(events);
+
+        noteViewUpdater.handleEvents(events);
     }
 
     public void handleCommand(UpdateNoteCommand command) {
         List<NoteDomainEvent> events = noteCommandHandler.handleCommand(command);
         noteDomainEventRepository.save(events);
+
+        noteViewUpdater.handleEvents(events);
     }
 
     public void handleCommand(DeleteNoteCommand command) {
         List<NoteDomainEvent> events = noteCommandHandler.handleCommand(command);
         noteDomainEventRepository.save(events);
+
+        noteViewUpdater.handleEvents(events);
     }
 }
