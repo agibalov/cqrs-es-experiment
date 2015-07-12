@@ -1,5 +1,8 @@
 package me.loki2302;
 
+import me.loki2302.commands.CreateNoteCommand;
+import me.loki2302.commands.DeleteNoteCommand;
+import me.loki2302.commands.UpdateNoteCommand;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +24,7 @@ public class DummyTest {
 
     @Test
     public void canCreateNote() {
-        noteService.createNote("note1", "hello");
+        noteService.handleCommand(makeCreateNoteCommand("note1", "hello"));
         Note note = noteService.getNoteById("note1");
         assertEquals("note1", note.id);
         assertEquals("hello", note.text);
@@ -29,8 +32,8 @@ public class DummyTest {
 
     @Test
     public void canUpdateNote() {
-        noteService.createNote("note1", "hello");
-        noteService.updateNote("note1", "omg");
+        noteService.handleCommand(makeCreateNoteCommand("note1", "hello"));
+        noteService.handleCommand(makeUpdateNoteCommand("note1", "omg"));
         Note note = noteService.getNoteById("note1");
         assertEquals("note1", note.id);
         assertEquals("omg", note.text);
@@ -38,9 +41,29 @@ public class DummyTest {
 
     @Test
     public void canDeleteNote() {
-        noteService.createNote("note1", "hello");
-        noteService.deleteNote("note1");
+        noteService.handleCommand(makeCreateNoteCommand("note1", "hello"));
+        noteService.handleCommand(makeDeleteNoteCommand("note1"));
         Note note = noteService.getNoteById("note1");
         assertNull(note);
+    }
+
+    private static CreateNoteCommand makeCreateNoteCommand(String id, String text) {
+        CreateNoteCommand command = new CreateNoteCommand();
+        command.id = id;
+        command.text = text;
+        return command;
+    }
+
+    private static UpdateNoteCommand makeUpdateNoteCommand(String id, String text) {
+        UpdateNoteCommand command = new UpdateNoteCommand();
+        command.id = id;
+        command.text = text;
+        return command;
+    }
+
+    private static DeleteNoteCommand makeDeleteNoteCommand(String id) {
+        DeleteNoteCommand command = new DeleteNoteCommand();
+        command.id = id;
+        return command;
     }
 }

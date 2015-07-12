@@ -1,5 +1,8 @@
 package me.loki2302;
 
+import me.loki2302.commands.CreateNoteCommand;
+import me.loki2302.commands.DeleteNoteCommand;
+import me.loki2302.commands.UpdateNoteCommand;
 import me.loki2302.entities.NoteCreatedDomainEvent;
 import me.loki2302.entities.NoteDeletedDomainEvent;
 import me.loki2302.entities.NoteDomainEvent;
@@ -50,39 +53,39 @@ public class NoteService {
         return note;
     }
 
-    public Note createNote(String id, String text) {
+    public Note handleCommand(CreateNoteCommand command) {
         // TODO: check if note does not exist
 
         NoteCreatedDomainEvent e = new NoteCreatedDomainEvent();
-        e.noteId = id;
-        e.text = text;
+        e.noteId = command.id;
+        e.text = command.text;
         noteDomainEventRepository.save(e);
 
         Note note = new Note();
-        note.id = id;
-        note.text = text;
+        note.id = command.id;
+        note.text = command.text;
         return note;
     }
 
-    public Note updateNote(String id, String text) {
+    public Note handleCommand(UpdateNoteCommand command) {
         // TODO: check if note exists
 
         NoteUpdatedDomainEvent e = new NoteUpdatedDomainEvent();
-        e.noteId = id;
-        e.text = text;
+        e.noteId = command.id;
+        e.text = command.text;
         noteDomainEventRepository.save(e);
 
         Note note = new Note();
-        note.id = id;
-        note.text = text;
+        note.id = command.id;
+        note.text = command.text;
         return note;
     }
 
-    public void deleteNote(String id) {
+    public void handleCommand(DeleteNoteCommand command) {
         // TODO: check if note exists
 
         NoteDeletedDomainEvent e = new NoteDeletedDomainEvent();
-        e.noteId = id;
+        e.noteId = command.id;
         noteDomainEventRepository.save(e);
     }
 }
