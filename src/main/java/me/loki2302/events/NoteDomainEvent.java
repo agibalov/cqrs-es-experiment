@@ -1,4 +1,4 @@
-package me.loki2302.entities;
+package me.loki2302.events;
 
 import javax.persistence.*;
 

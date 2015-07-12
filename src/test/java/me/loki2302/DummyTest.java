@@ -3,6 +3,9 @@ package me.loki2302;
 import me.loki2302.commands.CreateNoteCommand;
 import me.loki2302.commands.DeleteNoteCommand;
 import me.loki2302.commands.UpdateNoteCommand;
+import me.loki2302.queries.GetByIdNoteQuery;
+import me.loki2302.queries.NoteDTO;
+import me.loki2302.queries.NoteQueryHandler;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,30 +23,33 @@ import static org.junit.Assert.assertNull;
 @SpringApplicationConfiguration(classes = Config.class)
 public class DummyTest {
     @Autowired
-    private NoteService noteService;
+    private NoteServiceFacade noteServiceFacade;
+
+    @Autowired
+    private NoteQueryHandler noteQueryHandler;
 
     @Test
     public void canCreateNote() {
-        noteService.handleCommand(makeCreateNoteCommand("note1", "hello"));
-        Note note = noteService.getNoteById("note1");
+        noteServiceFacade.handleCommand(makeCreateNoteCommand("note1", "hello"));
+        NoteDTO note = noteQueryHandler.handle(makeGetByIdNoteQuery("note1"));
         assertEquals("note1", note.id);
         assertEquals("hello", note.text);
     }
 
     @Test
     public void canUpdateNote() {
-        noteService.handleCommand(makeCreateNoteCommand("note1", "hello"));
-        noteService.handleCommand(makeUpdateNoteCommand("note1", "omg"));
-        Note note = noteService.getNoteById("note1");
+        noteServiceFacade.handleCommand(makeCreateNoteCommand("note1", "hello"));
+        noteServiceFacade.handleCommand(makeUpdateNoteCommand("note1", "omg"));
+        NoteDTO note = noteQueryHandler.handle(makeGetByIdNoteQuery("note1"));
         assertEquals("note1", note.id);
         assertEquals("omg", note.text);
     }
 
     @Test
     public void canDeleteNote() {
-        noteService.handleCommand(makeCreateNoteCommand("note1", "hello"));
-        noteService.handleCommand(makeDeleteNoteCommand("note1"));
-        Note note = noteService.getNoteById("note1");
+        noteServiceFacade.handleCommand(makeCreateNoteCommand("note1", "hello"));
+        noteServiceFacade.handleCommand(makeDeleteNoteCommand("note1"));
+        NoteDTO note = noteQueryHandler.handle(makeGetByIdNoteQuery("note1"));
         assertNull(note);
     }
 
@@ -65,5 +71,11 @@ public class DummyTest {
         DeleteNoteCommand command = new DeleteNoteCommand();
         command.id = id;
         return command;
+    }
+
+    private static GetByIdNoteQuery makeGetByIdNoteQuery(String id) {
+        GetByIdNoteQuery query = new GetByIdNoteQuery();
+        query.id = id;
+        return query;
     }
 }
