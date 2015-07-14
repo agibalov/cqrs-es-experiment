@@ -3,6 +3,7 @@ package me.loki2302;
 import me.loki2302.commands.CreateNoteCommand;
 import me.loki2302.commands.DeleteNoteCommand;
 import me.loki2302.commands.UpdateNoteCommand;
+import me.loki2302.queries.GetAllNoteQuery;
 import me.loki2302.queries.GetByIdNoteQuery;
 import me.loki2302.queries.NoteDTO;
 import me.loki2302.queries.NoteQueryHandler;
@@ -13,6 +14,8 @@ import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -34,6 +37,7 @@ public class DummyTest {
         NoteDTO note = noteQueryHandler.handle(makeGetByIdNoteQuery("note1"));
         assertEquals("note1", note.id);
         assertEquals("hello", note.text);
+        assertEquals(5, note.textLength);
     }
 
     @Test
@@ -43,6 +47,7 @@ public class DummyTest {
         NoteDTO note = noteQueryHandler.handle(makeGetByIdNoteQuery("note1"));
         assertEquals("note1", note.id);
         assertEquals("omg", note.text);
+        assertEquals(3, note.textLength);
     }
 
     @Test
@@ -51,6 +56,15 @@ public class DummyTest {
         noteServiceFacade.handleCommand(makeDeleteNoteCommand("note1"));
         NoteDTO note = noteQueryHandler.handle(makeGetByIdNoteQuery("note1"));
         assertNull(note);
+    }
+
+    @Test
+    public void canGetAllNotes() {
+        noteServiceFacade.handleCommand(makeCreateNoteCommand("note1", "omg"));
+        noteServiceFacade.handleCommand(makeCreateNoteCommand("note2", "wtf"));
+        noteServiceFacade.handleCommand(makeCreateNoteCommand("note3", "bbq"));
+        List<NoteDTO> noteDTOs = noteQueryHandler.handle(makeGetAllNoteQuery());
+        assertEquals(3, noteDTOs.size());
     }
 
     private static CreateNoteCommand makeCreateNoteCommand(String id, String text) {
@@ -77,5 +91,9 @@ public class DummyTest {
         GetByIdNoteQuery query = new GetByIdNoteQuery();
         query.id = id;
         return query;
+    }
+
+    private static GetAllNoteQuery makeGetAllNoteQuery() {
+        return new GetAllNoteQuery();
     }
 }

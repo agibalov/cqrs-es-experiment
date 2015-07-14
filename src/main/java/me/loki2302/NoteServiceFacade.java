@@ -4,6 +4,7 @@ import me.loki2302.commands.CreateNoteCommand;
 import me.loki2302.commands.DeleteNoteCommand;
 import me.loki2302.commands.UpdateNoteCommand;
 import me.loki2302.events.NoteDomainEvent;
+import me.loki2302.views.NoteViewUpdater;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

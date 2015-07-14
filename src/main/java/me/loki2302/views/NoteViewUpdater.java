@@ -1,10 +1,11 @@
-package me.loki2302;
+package me.loki2302.views;
 
 import me.loki2302.events.NoteCreatedDomainEvent;
 import me.loki2302.events.NoteDeletedDomainEvent;
 import me.loki2302.events.NoteDomainEvent;
 import me.loki2302.events.NoteUpdatedDomainEvent;
 import me.loki2302.views.NoteView;
+import me.loki2302.views.NoteViewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,6 +43,7 @@ public class NoteViewUpdater {
         NoteView noteView = new NoteView();
         noteView.id = event.noteId;
         noteView.text = event.text;
+        noteView.textLength = event.text.length();
         noteViewRepository.save(noteView);
     }
 
@@ -52,6 +54,7 @@ public class NoteViewUpdater {
         }
 
         noteView.text = event.text;
+        noteView.textLength = event.text.length();
         noteViewRepository.save(noteView);
     }
 

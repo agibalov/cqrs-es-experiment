@@ -8,4 +8,5 @@ public class NoteView {
     @Id
     public String id;
     public String text;
+    public int textLength;
 }
